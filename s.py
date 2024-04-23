@@ -272,6 +272,34 @@ with open('output.txt', 'w') as y:
     #print(f"Number of valid transactions: {coutt}")
     #print(f"Total fee: {fee}")
 
+    # Convert txid_set to a list
+    txid_list = list(txid_set)
+    wtxid_list = txid_list.copy()
+    wtxid_list.insert(0,'0000000000000000000000000000000000000000000000000000000000000000')
+    
+    while len(wtxid_list)>1:
+        temp_g = []
+        for i in range(0, len(wtxid_list), 2):
+            if i+1 < len(wtxid_list):
+                # Concatenate two txids, hash them, and convert the result to hexadecimal
+                concatenated_hash = hashlib.sha256(hashlib.sha256(bytes.fromhex(wtxid_list[i] + wtxid_list[i+1])).digest()).digest().hex()
+                temp_g.append(concatenated_hash)
+            else:
+                #if there is a single txid then concatenate it with itself and hash it
+                concatenated_hash = hashlib.sha256(hashlib.sha256(bytes.fromhex(wtxid_list[i] + wtxid_list[i])).digest()).digest().hex()
+                temp_g.append(concatenated_hash)
+        wtxid_list = temp_g
+    
+    witness_root_hash = wtxid_list[0]
+    #print(f"witness root hash : {witness_root_hash}")
+    witness_root_hash += '0000000000000000000000000000000000000000000000000000000000000000'
+    #hash the witness root hash
+    wtxid_commitment = hashlib.sha256(hashlib.sha256(bytes.fromhex(witness_root_hash)).digest()).digest()
+    wtxid_commitment = wtxid_commitment.hex()
+    wtxid_commitment_size = len(wtxid_commitment)
+    wtxid_commitment_size = wtxid_commitment_size//2
+    wtxid_commitment_size = int_to_hex_compact_size_integer(wtxid_commitment_size)
+
     #creating coinbase transaction
     ver_c = "01000000"
     marker_c = "00"
@@ -288,14 +316,12 @@ with open('output.txt', 'w') as y:
     scriptpubkey_size_c = "19"
     scriptpubkey_c = "76a9142c30a6aaac6d96687291475d7d52f4b469f665a688ac"
     amount_two_c = "0000000000000000"
-    scriptpubkey_size_two_c = "26"
-    scriptpubkey_two_c = "6a24aa21a9edfaa194df59043645ba0f58aad74bfd5693fa497093174d12a4bb3b0574a878db"
     stack_c = "01"
     size_stack_c = "20"
     witness_c = "0000000000000000000000000000000000000000000000000000000000000000"
     locktime_c = "00000000"
     
-    coinbase = ver_c + marker_c + flag + input_cc + input_c + vout_c + scriptsig_size_c + scriptsig_c + sequence_c + output_cc + amount + scriptpubkey_size_c + scriptpubkey_c + amount_two_c + scriptpubkey_size_two_c + scriptpubkey_two_c + stack_c + size_stack_c + witness_c + locktime_c
+    coinbase = ver_c + marker_c + flag + input_cc + input_c + vout_c + scriptsig_size_c + scriptsig_c + sequence_c + output_cc + amount + scriptpubkey_size_c + scriptpubkey_c + amount_two_c + wtxid_commitment_size + wtxid_commitment + stack_c + size_stack_c + witness_c + locktime_c
     #print(f"Coinbase: {coinbase}")
     #hash256 of the coinbase
     coinbase = bytes.fromhex(coinbase)
@@ -305,9 +331,6 @@ with open('output.txt', 'w') as y:
 
     #merkel root calculation using the txid_set
     merkel_root = []
-
-    # Convert txid_set to a list
-    txid_list = list(txid_set)
     txid_list.insert(0,coinbase_hash.hex())
     #make a copy of txid_list
     final_txid_list = txid_list.copy()
@@ -324,11 +347,11 @@ with open('output.txt', 'w') as y:
                 concatenated_hash = hashlib.sha256(hashlib.sha256(bytes.fromhex(txid_list[i] + txid_list[i])).digest()).digest().hex()
                 temp_t.append(concatenated_hash)
         txid_list = temp_t
-
+    
     # The resulting merkel root will be the first element of txid_list
     merkel_root = txid_list[0]
     #print(f"Merkel Root: {merkel_root}")
-
+    
     #block header creation
     version_bh = "00000020"
     previous_block_hash = "0000000000000000000000000000000000000000000000000000000000000000"
