@@ -296,6 +296,7 @@ with open('output.txt', 'w') as y:
     #hash the witness root hash
     wtxid_commitment = hashlib.sha256(hashlib.sha256(bytes.fromhex(witness_root_hash)).digest()).digest()
     wtxid_commitment = wtxid_commitment.hex()
+    wtxid_commitment = '6a24aa21a9ed' + wtxid_commitment
     wtxid_commitment_size = len(wtxid_commitment)
     wtxid_commitment_size = wtxid_commitment_size//2
     wtxid_commitment_size = int_to_hex_compact_size_integer(wtxid_commitment_size)
@@ -309,7 +310,7 @@ with open('output.txt', 'w') as y:
     vout_c = "ffffffff"
     scriptsig_size_c = "1b"
     scriptsig_c = "03951a0604f15ccf5609013803062b9b5a0100072f425443432f20"
-    sequence_c = "00000000"
+    sequence_c = "ffffffff"
     output_cc = "02"
     amount = fee + 625000000
     amount = int_to_little_endian_8bytes(amount)
