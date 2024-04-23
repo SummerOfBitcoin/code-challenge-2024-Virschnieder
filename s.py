@@ -235,10 +235,8 @@ with open('output.txt', 'w') as y:
                         print("False")
                         flag = 1
                 
-                if flag == 0:
-                    for i in range(output_count):
-                        fee += int(value_in[i], 16) - int(value_out[i], 16)
-
+                
+                
                 if flag == 1:
                     count_valid_tx += 1
                 bytes_string = bytes.fromhex(data_c)

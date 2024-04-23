@@ -1,4 +1,5 @@
 # Update this file to run your own code
-cd miner
+   
+#!/bin/bash
 
-cargo run
+python3 s.py
