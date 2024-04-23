@@ -330,7 +330,7 @@ with open('output.txt', 'w') as y:
     #iterate over all nonce values till the block hash is less than the target
     target = "0000ffff00000000000000000000000000000000000000000000000000000000"
     target_int = int(target, 16)
-    print(f"Target: {target_int}")
+    #print(f"Target: {target_int}")
     block_header = version_bh + previous_block_hash + merkel_root + current_time + bits + nonce
     block_header = bytes.fromhex(block_header)
     block_hash = hashlib.sha256(hashlib.sha256(block_header).digest()).digest()
@@ -354,7 +354,7 @@ with open('output.txt', 'w') as y:
     #block_hash = hashlib.sha256(hashlib.sha256(block_header).digest()).digest()
     #print(f"Block Hash: {block_hash}")
     #block_hash_int = int(block_hash, 16)
-    print(f"Block Hash Int: {block_hash_int}")
+    #print(f"Block Hash Int: {block_hash_int}")
     #print(f"Nonce: {nonce}")
     #print the final_txid_list in reverse byte order
     for i in range(len(final_txid_list)):
