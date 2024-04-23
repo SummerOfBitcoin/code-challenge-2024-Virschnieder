@@ -330,10 +330,13 @@ with open('output.txt', 'w') as y:
     #iterate over all nonce values till the block hash is less than the target
     target = "0000ffff00000000000000000000000000000000000000000000000000000000"
     target_int = int(target, 16)
+    #print(f"Target: {target_int}")
     block_header = version_bh + previous_block_hash + merkel_root + current_time + bits + nonce
     block_header = bytes.fromhex(block_header)
     block_hash = hashlib.sha256(hashlib.sha256(block_header).digest()).digest()
     block_hash_int = int(block_hash.hex(),16)
+    #print(f"Block Hash: {block_hash_int}")
+
 
     while block_hash_int > target_int and nonce != "ffffffff":
         nonce = int_to_little_endian_4bytes(int(nonce, 16) + 1)
@@ -341,13 +344,12 @@ with open('output.txt', 'w') as y:
         block_header = bytes.fromhex(block_header)
         block_hash = hashlib.sha256(hashlib.sha256(block_header).digest()).digest()
         block_hash_int = int(block_hash.hex(), 16)
-
-    block_header = version_bh + previous_block_hash + merkel_root + current_time + bits + nonce
-    print(f"{block_header}")
+    
+    print(f"{block_header.hex()}")
     print(f"{coinbase.hex()}")
     #hash256 of the block header
-    block_header = bytes.fromhex(block_header)
-    block_hash = hashlib.sha256(hashlib.sha256(block_header).digest()).digest()
+    #block_header = bytes.fromhex(block_header)
+    #block_hash = hashlib.sha256(hashlib.sha256(block_header).digest()).digest()
     #print(f"Block Hash: {block_hash.hex()}")
     #print(f"Nonce: {nonce}")
     #print the final_txid_list in reverse byte order
