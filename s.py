@@ -325,7 +325,7 @@ with open('output.txt', 'w') as y:
     previous_block_hash = "0000000000000000000000000000000000000000000000000000000000000000"
     current_time = int(time.time())
     current_time = int_to_little_endian_4bytes(current_time)
-    bits = "1f00ffff"
+    bits = "ffff001f"
     nonce = "00000000"
     #iterate over all nonce values till the block hash is less than the target
     target = "0000ffff00000000000000000000000000000000000000000000000000000000"
