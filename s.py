@@ -274,19 +274,28 @@ with open('output.txt', 'w') as y:
 
     #creating coinbase transaction
     ver_c = "01000000"
+    marker_c = "00"
+    flag = "01"
     input_cc = "01"
     input_c ="0000000000000000000000000000000000000000000000000000000000000000"
     vout_c = "ffffffff"
     scriptsig_size_c = "1b"
     scriptsig_c = "03951a0604f15ccf5609013803062b9b5a0100072f425443432f20"
     sequence_c = "00000000"
-    output_cc = "01"
+    output_cc = "02"
     amount = fee + 625000000
     amount = int_to_little_endian_8bytes(amount)
     scriptpubkey_size_c = "19"
     scriptpubkey_c = "76a9142c30a6aaac6d96687291475d7d52f4b469f665a688ac"
+    amount_two_c = "0000000000000000"
+    scriptpubkey_size_two_c = "26"
+    scriptpubkey_two_c = "6a24aa21a9edfaa194df59043645ba0f58aad74bfd5693fa497093174d12a4bb3b0574a878db"
+    stack_c = "01"
+    size_stack_c = "20"
+    witness_c = "0000000000000000000000000000000000000000000000000000000000000000"
     locktime_c = "00000000"
-    coinbase = ver_c + input_cc + input_c + vout_c + scriptsig_size_c + scriptsig_c + sequence_c + output_cc + amount + scriptpubkey_size_c + scriptpubkey_c + locktime_c
+    
+    coinbase = ver_c + marker_c + flag + input_cc + input_c + vout_c + scriptsig_size_c + scriptsig_c + sequence_c + output_cc + amount + scriptpubkey_size_c + scriptpubkey_c + amount_two_c + scriptpubkey_size_two_c + scriptpubkey_two_c + stack_c + size_stack_c + witness_c + locktime_c
     #print(f"Coinbase: {coinbase}")
     #hash256 of the coinbase
     coinbase = bytes.fromhex(coinbase)
