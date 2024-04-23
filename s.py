@@ -321,7 +321,7 @@ with open('output.txt', 'w') as y:
     #print(f"Merkel Root: {merkel_root}")
 
     #block header creation
-    version_bh = "02000000"
+    version_bh = "01000000"
     previous_block_hash = "0000000000000000000000000000000000000000000000000000000000000000"
     current_time = int(time.time())
     current_time = int_to_little_endian_4bytes(current_time)
