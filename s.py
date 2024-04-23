@@ -334,7 +334,8 @@ with open('output.txt', 'w') as y:
     block_header = version_bh + previous_block_hash + merkel_root + current_time + bits + nonce
     block_header = bytes.fromhex(block_header)
     block_hash = hashlib.sha256(hashlib.sha256(block_header).digest()).digest()
-    block_hash_int = int(block_hash.hex(),16)
+    block_hash = reverse_byte(block_hash)
+    block_hash_int = int(block_hash,16)
     #print(f"Block Hash: {block_hash_int}")
 
 
@@ -343,14 +344,17 @@ with open('output.txt', 'w') as y:
         block_header = version_bh + previous_block_hash + merkel_root + current_time + bits + nonce
         block_header = bytes.fromhex(block_header)
         block_hash = hashlib.sha256(hashlib.sha256(block_header).digest()).digest()
-        block_hash_int = int(block_hash.hex(), 16)
+        block_hash = reverse_byte(block_hash)
+        block_hash_int = int(block_hash, 16)
     
     print(f"{block_header.hex()}")
     print(f"{coinbase.hex()}")
     #hash256 of the block header
     #block_header = bytes.fromhex(block_header)
     #block_hash = hashlib.sha256(hashlib.sha256(block_header).digest()).digest()
-    #print(f"Block Hash: {block_hash.hex()}")
+    #print(f"Block Hash: {block_hash}")
+    block_hash_int = int(block_hash, 16)
+    #print(f"Block Hash Int: {block_hash_int}")
     #print(f"Nonce: {nonce}")
     #print the final_txid_list in reverse byte order
     for i in range(len(final_txid_list)):
