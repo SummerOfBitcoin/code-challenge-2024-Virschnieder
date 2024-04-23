@@ -324,8 +324,9 @@ with open('output.txt', 'w') as y:
     coinbase = ver_c + marker_c + flag + input_cc + input_c + vout_c + scriptsig_size_c + scriptsig_c + sequence_c + output_cc + amount + scriptpubkey_size_c + scriptpubkey_c + amount_two_c + wtxid_commitment_size + wtxid_commitment + stack_c + size_stack_c + witness_c + locktime_c
     #print(f"Coinbase: {coinbase}")
     #hash256 of the coinbase
-    coinbase = bytes.fromhex(coinbase)
-    coinbase_hash = hashlib.sha256(hashlib.sha256(coinbase).digest()).digest()
+    coinbase_txid = ver_c + input_cc + input_c + vout_c + scriptsig_size_c + scriptsig_c + sequence_c + output_cc + amount + scriptpubkey_size_c + scriptpubkey_c + amount_two_c + wtxid_commitment_size + wtxid_commitment + locktime_c
+    coinbase_txid = bytes.fromhex(coinbase_txid)
+    coinbase_hash = hashlib.sha256(hashlib.sha256(coinbase_txid).digest()).digest()
     #print(f"Coinbase Hash: {coinbase_hash.hex()}")
     
 
@@ -380,7 +381,7 @@ with open('output.txt', 'w') as y:
         block_hash_int = int(block_hash, 16)
     
     print(f"{block_header.hex()}")
-    print(f"{coinbase.hex()}")
+    print(f"{coinbase}")
     #hash256 of the block header
     #block_header = bytes.fromhex(block_header)
     #block_hash = hashlib.sha256(hashlib.sha256(block_header).digest()).digest()
