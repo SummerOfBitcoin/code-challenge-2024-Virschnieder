@@ -246,7 +246,7 @@ with open('output.txt', 'w') as y:
                 if hash.hex() + ".json" == filename:
                     temp_segwit += 1
             # If all scriptpubkey_type are v0_p2pkh or v1_p2pkh, print the version number
-            
+            all_valid = False
             if all_valid:
                 array_s_m = []
                 data_c = ""
