@@ -94,7 +94,7 @@ with open('output.txt', 'w') as y:
                     break
             
 
-            if all_valid_segwit and count_segwit_tx < 500:
+            if all_valid_segwit and count_segwit_tx < 1:
                 count_segwit_tx += 1
                 data_cs = ""
                 array_m_segwit = []
@@ -118,10 +118,7 @@ with open('output.txt', 'w') as y:
                 output_count = len(value)
                 version_hex = int_to_hex(version)
                 data_cs += version_hex
-                #print(filename)
                 data_wit += version_hex
-                #print(f"Version: {version_hex}")
-                
                 data_wit += "0001"
                 
                 array_m_segwit.append(version_hex)
@@ -245,9 +242,9 @@ with open('output.txt', 'w') as y:
                     array_s.append(s)
                     array_public_key.append(public_key)
                 data_wit += locktime
-                ##print(f"Data_wit: {data_wit}")
+                
                 wtxid_h = hashlib.sha256(hashlib.sha256(bytes.fromhex(data_wit)).digest()).digest()
-                wtxid_h = reverse_byte(wtxid_h)
+               
                 
                 for i in range(n_txids):
                     pub_key = array_public_key[i]
@@ -261,7 +258,8 @@ with open('output.txt', 'w') as y:
                 hash = hashlib.sha256(hashlib.sha256(bytes_string).digest()).digest()
                 if flag == 0:
                     txid_set.add(hash.hex())
-                    wtxid_set.add(wtxid_h)
+                    wtxid_set.add(wtxid_h.hex())
+                   
                     temp_out = 0
                     for i in value:
                         temp_out += little_endian_to_int(bytes.fromhex(i))
@@ -275,6 +273,7 @@ with open('output.txt', 'w') as y:
                     temp_segwit += 1
             # If all scriptpubkey_type are v0_p2pkh or v1_p2pkh, print the version number
             
+
             if all_valid and counter < 1:
                 array_s_m = []
                 data_c = ""
@@ -465,7 +464,7 @@ with open('output.txt', 'w') as y:
     txid_list = list(txid_set)
     wtxid_list = list(wtxid_set)
     wtxid_list.insert(0,'0000000000000000000000000000000000000000000000000000000000000000')
-    
+   
     while len(wtxid_list)>1:
         temp_g = []
         for i in range(0, len(wtxid_list), 2):
@@ -477,10 +476,11 @@ with open('output.txt', 'w') as y:
                 #if there is a single txid then concatenate it with itself and hash it
                 concatenated_hash = hashlib.sha256(hashlib.sha256(bytes.fromhex(wtxid_list[i] + wtxid_list[i])).digest()).digest().hex()
                 temp_g.append(concatenated_hash)
+          
         wtxid_list = temp_g
     
     witness_root_hash = wtxid_list[0]
-    #print(f"witness root hash : {witness_root_hash}")
+   
     witness_root_hash += '0000000000000000000000000000000000000000000000000000000000000000'
     #hash the witness root hash
     wtxid_commitment = hashlib.sha256(hashlib.sha256(bytes.fromhex(witness_root_hash)).digest()).digest()
@@ -537,6 +537,7 @@ with open('output.txt', 'w') as y:
                 #if there is a single txid then concatenate it with itself and hash it
                 concatenated_hash = hashlib.sha256(hashlib.sha256(bytes.fromhex(txid_list[i] + txid_list[i])).digest()).digest().hex()
                 temp_t.append(concatenated_hash)
+
         txid_list = temp_t
     
     # The resulting merkel root will be the first element of txid_list
