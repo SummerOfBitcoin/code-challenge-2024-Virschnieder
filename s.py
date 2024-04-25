@@ -241,6 +241,13 @@ with open('output.txt', 'w') as y:
                 if flag == 0:
                     txid_set.add(hash.hex())
                     wtxid_set.add(wtxid_h.hex())
+                    temp_out = 0
+                    for i in value:
+                        temp_out += little_endian_to_int(bytes.fromhex(i))
+                    temp_in = 0
+                    for i in v_input:
+                        temp_in += little_endian_to_int(bytes.fromhex(i))
+                    fee += temp_in - temp_out
                 hash = reverse_byte(hash)
                 hash = hashlib.sha256(bytes.fromhex(hash)).digest()
                 if hash.hex() + ".json" == filename:
