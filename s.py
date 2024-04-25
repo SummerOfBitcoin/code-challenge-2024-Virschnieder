@@ -129,6 +129,7 @@ with open('output.txt', 'w') as y:
                 data_cs += Input_count
                 data_wit += Input_count
                 #print(f"Input Count: {Input_count}")
+                tt = 2*(n_txids)
 
                 hash_inps = ""
                 hash_seq = ""
@@ -219,7 +220,7 @@ with open('output.txt', 'w') as y:
                 for i in range(n_txids):
                     #witness first element is the signature
                     signature = witness[i][0]
-                    data_wit += "02"
+                    data_wit += int_to_hex_compact_size_integer(tt)
                     sig_len = len(signature)
                     sig_len = sig_len//2
                     sig_len = int_to_hex_compact_size_integer(sig_len)
@@ -294,7 +295,6 @@ with open('output.txt', 'w') as y:
                 # Print the txids and vouts
                 n_txids = len(txids)
                 output_count = len(value)
-                
                 # Convert the version number to little endian and then to hex
                 version_hex = int_to_hex(version)
                 #print(f"Version number in little endian: {version_hex}")
