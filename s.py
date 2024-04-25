@@ -533,7 +533,7 @@ with open('output.txt', 'w') as y:
     block_hash = hashlib.sha256(hashlib.sha256(block_header).digest()).digest()
     block_hash = reverse_byte(block_hash)
     block_hash_int = int(block_hash,16)
-    #print(f"Block Hash: {block_hash_int}")
+    print(f"Block Hash: {block_hash_int}")
 
 
     while block_hash_int > target_int and nonce != "ffffffff":
