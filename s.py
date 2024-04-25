@@ -94,7 +94,7 @@ with open('output.txt', 'w') as y:
                     break
             
 
-            if all_valid_segwit and count_segwit_tx < 1:
+            if all_valid_segwit and count_segwit_tx < 500:
                 count_segwit_tx += 1
                 data_cs = ""
                 array_m_segwit = []
@@ -553,7 +553,7 @@ with open('output.txt', 'w') as y:
     #iterate over all nonce values till the block hash is less than the target
     target = "0000ffff00000000000000000000000000000000000000000000000000000000"
     target_int = int(target, 16)
-    #print(f"Target: {target_int}")
+    """ print(target_int) """
     block_header = version_bh + previous_block_hash + merkel_root + current_time + bits + nonce
     block_header = bytes.fromhex(block_header)
     block_hash = hashlib.sha256(hashlib.sha256(block_header).digest()).digest()
@@ -569,7 +569,7 @@ with open('output.txt', 'w') as y:
         block_hash = hashlib.sha256(hashlib.sha256(block_header).digest()).digest()
         block_hash = reverse_byte(block_hash)
         block_hash_int = int(block_hash, 16)
-    
+    """ print(block_hash_int) """
     print(f"{block_header.hex()}")
     print(f"{coinbase}")
     #hash256 of the block header
