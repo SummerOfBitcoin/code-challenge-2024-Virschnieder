@@ -116,11 +116,14 @@ with open('output.txt', 'w') as y:
                 version_hex = int_to_hex(version)
                 data_cs += version_hex
                 data_wit += version_hex
+                print(data_wit)
                 data_wit += "0001"
+                print(data_wit)
                 array_m_segwit.append(version_hex)
                 Input_count = int_to_hex_compact_size_integer(n_txids)
                 data_cs += Input_count
                 data_wit += Input_count
+                print(data_wit)
 
                 hash_inps = ""
                 hash_seq = ""
@@ -140,6 +143,7 @@ with open('output.txt', 'w') as y:
                     data_cs += sequence[i]
                     data_wit += sequence[i]
                     hash_seq += sequence[i]
+                    print(data_wit)
 
                 hash_seq = hashlib.sha256(hashlib.sha256(bytes.fromhex(hash_seq)).digest()).digest()
                 hash_inps = hashlib.sha256(hashlib.sha256(bytes.fromhex(hash_inps)).digest()).digest()
