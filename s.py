@@ -437,7 +437,6 @@ with open('output.txt', 'w') as y:
     # Convert txid_set to a list
     txid_list = list(txid_set)
     wtxid_list = list(wtxid_set)
-    wtxid_list = wtxid_list.copy()
     wtxid_list.insert(0,'0000000000000000000000000000000000000000000000000000000000000000')
     
     while len(wtxid_list)>1:
@@ -533,7 +532,7 @@ with open('output.txt', 'w') as y:
     block_hash = hashlib.sha256(hashlib.sha256(block_header).digest()).digest()
     block_hash = reverse_byte(block_hash)
     block_hash_int = int(block_hash,16)
-    print(f"Block Hash: {block_hash_int}")
+    
 
 
     while block_hash_int > target_int and nonce != "ffffffff":
