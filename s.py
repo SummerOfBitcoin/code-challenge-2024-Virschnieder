@@ -92,7 +92,7 @@ with open('output.txt', 'w') as y:
                 if scriptpubkey_type not in ["v0_p2wpkh"]:
                     all_valid_segwit = False
                     break
-            if all_valid_segwit & count_segwit_tx < 2500 :
+            if all_valid_segwit and count_segwit_tx < 2500:
                 count_segwit_tx += 1
                 data_cs = ""
                 array_m_segwit = []
@@ -559,5 +559,3 @@ with open('output.txt', 'w') as y:
     
     sys.stdout = original_stdout
             
-
-
