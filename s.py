@@ -95,7 +95,7 @@ with open('output.txt', 'w') as y:
                     all_valid_segwit = False
                     break
             
-            if all_valid_segwit and counter_segwit < 4:
+            if all_valid_segwit and counter_segwit < 2:
                 counter_segwit += 1
                 flag = 0
                 txid_data = ""
@@ -283,7 +283,8 @@ with open('output.txt', 'w') as y:
                         for i in v_in:
                             temp_in += little_endian_to_int(bytes.fromhex(i))
                         fee += temp_in - temp_out
-                
+            
+        
 ####################################################################################################################################################
 ####################################################################################################################################################
             all_valid = False
@@ -490,6 +491,7 @@ with open('output.txt', 'w') as y:
     wtxid_list = list(wtxid_set)
     wtxid_list.insert(0,'0000000000000000000000000000000000000000000000000000000000000000')
     
+
     while len(wtxid_list)>1:
         temp_g = []
         for i in range(0, len(wtxid_list), 2):
