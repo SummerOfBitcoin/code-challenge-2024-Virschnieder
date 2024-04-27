@@ -115,182 +115,178 @@ with open('output.txt', 'w') as y:
                     flag_witness = 1
                 v_in = [vin.get("prevout", {}).get("value") for vin in data.get("vin", [])]
 
-                flag_duplicate = 0
-                #iterate over all txids and see if it exists in the txid_ulitmate_set
-                for i in range(len(txids)):
-                    if txids[i] in txid_ultimate_set:
-                        flag_duplicate = 1
-                    else:
-                        txid_ultimate_set.add(txids[i])
                 
-                if flag_duplicate == 0 and flag_witness == 0:
-                    #print(f"filename: {filename}")
-                    n_txids = len(txids)
-                    output_count = len(value_out)
-                    version_hex = int_to_hex(version)
-                    #print (f"Version: {version_hex}")
-                    txid_data += version_hex
-                    wtxid_data += version_hex
-                    message_data.append(version_hex)
-                    #adding flag and marker in wtxid_data
-                    wtxid_data += "0001"
-                    txid_data += int_to_hex_compact_size_integer(n_txids)
-                    wtxid_data += int_to_hex_compact_size_integer(n_txids)
+                #print(f"filename: {filename}")
+                n_txids = len(txids)
+                output_count = len(value_out)
+                version_hex = int_to_hex(version)
+                #print (f"Version: {version_hex}")
+                txid_data += version_hex
+                wtxid_data += version_hex
+                message_data.append(version_hex)
+                #adding flag and marker in wtxid_data
+                wtxid_data += "0001"
+                txid_data += int_to_hex_compact_size_integer(n_txids)
+                wtxid_data += int_to_hex_compact_size_integer(n_txids)
 
-                    hash_inps = ""
-                    hash_seq = ""
+                hash_inps = ""
+                hash_seq = ""
 
-                    for i in range(n_txids):
-                        txids[i] = reverse_byte(bytes.fromhex(txids[i]))
-                        #print(f"Txid: {txids[i]}")
-                        txid_data += txids[i]
-                        wtxid_data += txids[i]
-                        hash_inps += txids[i]
-                        vouts[i] = int_to_hex(vouts[i])
-                        #print(f"Vout: {vouts[i]}")  
-                        txid_data += vouts[i]
-                        wtxid_data += vouts[i]
-                        hash_inps += vouts[i]
-                        scriptsig_size = "00"
-                        #print(f"ScriptSig Size: {scriptsig_size}")
-                        txid_data += scriptsig_size
-                        wtxid_data += scriptsig_size
-                        sequence[i] = int_to_hex(sequence[i])
-                        #print(f"Sequence: {sequence[i]}")
-                        txid_data += sequence[i]
-                        wtxid_data += sequence[i]
-                        hash_seq += sequence[i]
+                for i in range(n_txids):
+                    txids[i] = reverse_byte(bytes.fromhex(txids[i]))
+                    #print(f"Txid: {txids[i]}")
+                    txid_data += txids[i]
+                    wtxid_data += txids[i]
+                    hash_inps += txids[i]
+                    vouts[i] = int_to_hex(vouts[i])
+                    #print(f"Vout: {vouts[i]}")  
+                    txid_data += vouts[i]
+                    wtxid_data += vouts[i]
+                    hash_inps += vouts[i]
+                    scriptsig_size = "00"
+                    #print(f"ScriptSig Size: {scriptsig_size}")
+                    txid_data += scriptsig_size
+                    wtxid_data += scriptsig_size
+                    sequence[i] = int_to_hex(sequence[i])
+                    #print(f"Sequence: {sequence[i]}")
+                    txid_data += sequence[i]
+                    wtxid_data += sequence[i]
+                    hash_seq += sequence[i]
+                
+                hash_seq = hashlib.sha256(hashlib.sha256(bytes.fromhex(hash_seq)).digest()).digest()
+                hash_inps = hashlib.sha256(hashlib.sha256(bytes.fromhex(hash_inps)).digest()).digest()
+                message_data.append(hash_inps.hex())
+                message_data.append(hash_seq.hex())
+                output_count = int_to_hex_compact_size_integer(output_count)
+                txid_data += output_count
+                wtxid_data += output_count
+
+                hash_outs = ""
+                for i in range(len(value_out)):
+                    value_out[i] = int_to_little_endian_8bytes(int(value_out[i]))
+                    #print(f"Amount: {value_out[i]}")
+                    txid_data += value_out[i]
+                    wtxid_data += value_out[i]
+                    hash_outs += value_out[i]
+                    scriptpubkey_size = len(scriptpubkey_out[i])
+                    scriptpubkey_size = scriptpubkey_size//2
+                    scriptpubkey_size = int_to_hex_compact_size_integer(scriptpubkey_size)
+                    #print(f"Scriptpubkey output size : {scriptpubkey_size}")
+                    txid_data += scriptpubkey_size
+                    wtxid_data += scriptpubkey_size 
+                    hash_outs += scriptpubkey_size
+                    #print(f"Scriptpubkey output : {scriptpubkey_out[i]}")
+                    txid_data += scriptpubkey_out[i]
+                    wtxid_data += scriptpubkey_out[i]
+                    hash_outs += scriptpubkey_out[i]
+                
+                hash_outs = hashlib.sha256(hashlib.sha256(bytes.fromhex(hash_outs)).digest()).digest()
+                message_data.append(hash_outs.hex())
+                locktime = int_to_hex(locktime)
+                #print(f"Locktime: {locktime}")
+                txid_data += locktime
+                message_data.append(locktime)
+                #print(f"Txid Data: {txid_data}")
+
+                array_message = []
+                for i in range(n_txids):
+                    temp_a = message_data.copy()
+                    temp_a.insert(3, txids[i])
+                    temp_a.insert(4, vouts[i])
+                    temp_a.insert(5, "1976a914")
+                    #remove 0014 from the front of scriptpubkey_in
+                    scriptpubkey_in[i] = scriptpubkey_in[i][4:]
+                    temp_a.insert(6, scriptpubkey_in[i])
+                    temp_a.insert(7, "88ac")
+                    v_in[i] = int_to_little_endian_8bytes(v_in[i])
+                    temp_a.insert(8, v_in[i])
+                    temp_a.insert(9, sequence[i])
+                    temp_a.append("01000000")
+                    message = ""
+                    for i in temp_a:
+                        message += i
+                    by_string = bytes.fromhex(message)
+                    hash_message = hashlib.sha256(hashlib.sha256(by_string).digest()).digest()
+                    array_message.append(hash_message.hex())
+                #print(f"Array Message: {array_message}")
+
+                array_r = []
+                array_s = []
+                array_public_key = []
+                for i in range(n_txids):
+                    signature = witness[i][0]
+                    wtxid_data += "02"
+                    #print(f"Signature: {signature}")
+                    sig_len = len(signature)
+                    sig_len = sig_len//2
+                    sig_len = int_to_hex_compact_size_integer(sig_len)
+                    wtxid_data += sig_len
+                    wtxid_data += signature
+                    #print(f"Signature Length: {sig_len}")
+                    #discard the first 6 hexadecimal characters, the next 2 hexadecimal characters is the length of r
+                    length_r = int(signature[6:8], 16)
+                    #next length_r*2 bytes is r
+                    r = signature[8:8+length_r*2]
+                    #discard the next 2 hexadecimal characters, the next 2 hexadecimal characters is the length of s
+                    length_s = int(signature[10+length_r*2:12+length_r*2], 16)
+                    #next length_s*2 bytes is s discarding the last 2 hexadecimal characters
+                    s = signature[12+length_r*2:12+length_r*2+length_s*2]
+                    #witness[i][1] is the public key
+                    public_key = witness[i][1]
+                    public_key_len = len(public_key)
+                    public_key_len = public_key_len//2
+                    public_key_len = int_to_hex_compact_size_integer(public_key_len)
+                    #print(f"Public Key Length: {public_key_len}")
+                    #print(f"Public Key: {public_key}")
+                    wtxid_data += public_key_len
+                    wtxid_data += public_key
+                    array_r.append(r)
+                    array_s.append(s)
+                    array_public_key.append(public_key)
+
+                wtxid_data += locktime
+                #print(f"Wtxid Data: {wtxid_data}")
+
+                for i in range(n_txids):
+                    pub_key = array_public_key[i]
+                    sig = {'r': int(array_r[i],16), 's': int(array_s[i],16)}
+                    mgs = int(array_message[i],16)
+                    result = v.verify_signature(pub_key, sig, mgs)
+                    if result != True:
+                        flag = 1
+                
+                bt_string = bytes.fromhex(wtxid_data)
+                hash_wtxid = hashlib.sha256(hashlib.sha256(bt_string).digest()).digest()
+                #print(f"Hash: {hash_wtxid.hex()}")
+                
+
+                bytes_string = bytes.fromhex(txid_data)
+                hash = hashlib.sha256(hashlib.sha256(bytes_string).digest()).digest()
+                #print(f"Hash: {hash.hex()}")
+
+                if flag == 0:
+                    #print("Valid Transaction")
+                    n_valid_tx += 1
+                    txid_set.add(hash.hex())
+                    wtxid_set.add(hash_wtxid.hex())
+                    #print(txid_set)
+                    #print(wtxid_set)
+
+                    temp_out = 0
+                    for i in value_out:
+                        temp_out += little_endian_to_int(bytes.fromhex(i))
+                    temp_in = 0
+                    for i in v_in:
+                        temp_in += little_endian_to_int(bytes.fromhex(i))
+                    fee += temp_in - temp_out
+                
                     
-                    hash_seq = hashlib.sha256(hashlib.sha256(bytes.fromhex(hash_seq)).digest()).digest()
-                    hash_inps = hashlib.sha256(hashlib.sha256(bytes.fromhex(hash_inps)).digest()).digest()
-                    message_data.append(hash_inps.hex())
-                    message_data.append(hash_seq.hex())
-                    output_count = int_to_hex_compact_size_integer(output_count)
-                    txid_data += output_count
-                    wtxid_data += output_count
-
-                    hash_outs = ""
-                    for i in range(len(value_out)):
-                        value_out[i] = int_to_little_endian_8bytes(int(value_out[i]))
-                        #print(f"Amount: {value_out[i]}")
-                        txid_data += value_out[i]
-                        wtxid_data += value_out[i]
-                        hash_outs += value_out[i]
-                        scriptpubkey_size = len(scriptpubkey_out[i])
-                        scriptpubkey_size = scriptpubkey_size//2
-                        scriptpubkey_size = int_to_hex_compact_size_integer(scriptpubkey_size)
-                        #print(f"Scriptpubkey output size : {scriptpubkey_size}")
-                        txid_data += scriptpubkey_size
-                        wtxid_data += scriptpubkey_size 
-                        hash_outs += scriptpubkey_size
-                        #print(f"Scriptpubkey output : {scriptpubkey_out[i]}")
-                        txid_data += scriptpubkey_out[i]
-                        wtxid_data += scriptpubkey_out[i]
-                        hash_outs += scriptpubkey_out[i]
                     
-                    hash_outs = hashlib.sha256(hashlib.sha256(bytes.fromhex(hash_outs)).digest()).digest()
-                    message_data.append(hash_outs.hex())
-                    locktime = int_to_hex(locktime)
-                    #print(f"Locktime: {locktime}")
-                    txid_data += locktime
-                    message_data.append(locktime)
-                    #print(f"Txid Data: {txid_data}")
-
-                    array_message = []
-                    for i in range(n_txids):
-                        temp_a = message_data.copy()
-                        temp_a.insert(3, txids[i])
-                        temp_a.insert(4, vouts[i])
-                        temp_a.insert(5, "1976a914")
-                        #remove 0014 from the front of scriptpubkey_in
-                        scriptpubkey_in[i] = scriptpubkey_in[i][4:]
-                        temp_a.insert(6, scriptpubkey_in[i])
-                        temp_a.insert(7, "88ac")
-                        v_in[i] = int_to_little_endian_8bytes(v_in[i])
-                        temp_a.insert(8, v_in[i])
-                        temp_a.insert(9, sequence[i])
-                        temp_a.append("01000000")
-                        message = ""
-                        for i in temp_a:
-                            message += i
-                        by_string = bytes.fromhex(message)
-                        hash_message = hashlib.sha256(hashlib.sha256(by_string).digest()).digest()
-                        array_message.append(hash_message.hex())
-                    #print(f"Array Message: {array_message}")
-
-                    array_r = []
-                    array_s = []
-                    array_public_key = []
-                    for i in range(n_txids):
-                        signature = witness[i][0]
-                        wtxid_data += "02"
-                        #print(f"Signature: {signature}")
-                        sig_len = len(signature)
-                        sig_len = sig_len//2
-                        sig_len = int_to_hex_compact_size_integer(sig_len)
-                        wtxid_data += sig_len
-                        wtxid_data += signature
-                        #print(f"Signature Length: {sig_len}")
-                        #discard the first 6 hexadecimal characters, the next 2 hexadecimal characters is the length of r
-                        length_r = int(signature[6:8], 16)
-                        #next length_r*2 bytes is r
-                        r = signature[8:8+length_r*2]
-                        #discard the next 2 hexadecimal characters, the next 2 hexadecimal characters is the length of s
-                        length_s = int(signature[10+length_r*2:12+length_r*2], 16)
-                        #next length_s*2 bytes is s discarding the last 2 hexadecimal characters
-                        s = signature[12+length_r*2:12+length_r*2+length_s*2]
-                        #witness[i][1] is the public key
-                        public_key = witness[i][1]
-                        public_key_len = len(public_key)
-                        public_key_len = public_key_len//2
-                        public_key_len = int_to_hex_compact_size_integer(public_key_len)
-                        #print(f"Public Key Length: {public_key_len}")
-                        #print(f"Public Key: {public_key}")
-                        wtxid_data += public_key_len
-                        wtxid_data += public_key
-                        array_r.append(r)
-                        array_s.append(s)
-                        array_public_key.append(public_key)
-
-                    wtxid_data += locktime
-                    #print(f"Wtxid Data: {wtxid_data}")
-
-                    for i in range(n_txids):
-                        pub_key = array_public_key[i]
-                        sig = {'r': int(array_r[i],16), 's': int(array_s[i],16)}
-                        mgs = int(array_message[i],16)
-                        result = v.verify_signature(pub_key, sig, mgs)
-                        if result != True:
-                            flag = 1
-                    
-                    bt_string = bytes.fromhex(wtxid_data)
-                    hash_wtxid = hashlib.sha256(hashlib.sha256(bt_string).digest()).digest()
-                    #print(f"Hash: {hash_wtxid.hex()}")
-                    
-
-                    bytes_string = bytes.fromhex(txid_data)
-                    hash = hashlib.sha256(hashlib.sha256(bytes_string).digest()).digest()
-                    #print(f"Hash: {hash.hex()}")
-
-                    if flag == 0:
-                        #print("Valid Transaction")
-                        n_valid_tx += 1
-                        txid_set.add(hash.hex())
-                        wtxid_set.add(hash_wtxid.hex())
-                        #print(txid_set)
-                        #print(wtxid_set)
-
-                        temp_out = 0
-                        for i in value_out:
-                            temp_out += little_endian_to_int(bytes.fromhex(i))
-                        temp_in = 0
-                        for i in v_in:
-                            temp_in += little_endian_to_int(bytes.fromhex(i))
-                        fee += temp_in - temp_out
-                    
-                    hash = reverse_byte(hash)
-                    hash = hashlib.sha256(bytes.fromhex(hash)).digest()
-            # If all scriptpubkey_type are v0_p2pkh or v1_p2pkh, print the version number
+                hash = reverse_byte(hash)
+                hash = hashlib.sha256(bytes.fromhex(hash)).digest()
+####################################################################################################################################################
+####################################################################################################################################################
+            
             if all_valid:
                 array_s_m = []
                 data_c = ""
@@ -311,6 +307,15 @@ with open('output.txt', 'w') as y:
                 # Print the txids and vouts
                 n_txids = len(txids)
                 output_count = len(value)
+
+                flag_duplicate = 0
+                for i in range(n_txids):
+                    #iterate over all txids and see if it exists in the txid_ulitmate_set
+                    if txids[i] in txid_ultimate_set:
+                        flag_duplicate = 1
+                        dup += 1
+                    else:
+                        txid_ultimate_set.add(txids[i])
                 
                 """ flag_duplicate = 0
                 #iterate over all txids and see if it exists in the txid_ulitmate_set
