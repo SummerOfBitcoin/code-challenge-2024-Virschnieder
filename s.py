@@ -95,7 +95,7 @@ with open('output.txt', 'w') as y:
                     all_valid_segwit = False
                     break
             
-            if all_valid_segwit and counter_segwit < 2:
+            if all_valid_segwit and counter_segwit < 1528:
                 counter_segwit += 1
                 flag = 0
                 txid_data = ""
