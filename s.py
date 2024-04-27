@@ -490,7 +490,6 @@ with open('output.txt', 'w') as y:
     txid_list = list(txid_set)
     wtxid_list = list(wtxid_set)
     wtxid_list.insert(0,'0000000000000000000000000000000000000000000000000000000000000000')
-    
 
     while len(wtxid_list)>1:
         temp_g = []
