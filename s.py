@@ -94,7 +94,7 @@ with open('output.txt', 'w') as y:
                 if scriptpubkey_type not in ["v0_p2wpkh"]:
                     all_valid_segwit = False
                     break
-            all_valid_segwitm = False
+            
             if all_valid_segwit:
                 counter_segwit += 1
                 flag = 0
@@ -126,6 +126,7 @@ with open('output.txt', 'w') as y:
                     else:
                         txid_ultimate_set.add(txids[i])
                 
+                flag_duplicate = 0
                 if flag_duplicate == 0:
                     output_count = len(value_out)
                     version_hex = int_to_hex(version)
