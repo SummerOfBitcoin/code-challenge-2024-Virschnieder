@@ -312,14 +312,14 @@ with open('output.txt', 'w') as y:
                 n_txids = len(txids)
                 output_count = len(value)
                 
-                flag_duplicate = 0
+                """ flag_duplicate = 0
                 #iterate over all txids and see if it exists in the txid_ulitmate_set
                 for i in range(len(txids)):
                     if txids[i] in txid_ultimate_set:
                         flag_duplicate = 1
                         dup += 1
                     else:
-                        txid_ultimate_set.add(txids[i])
+                        txid_ultimate_set.add(txids[i]) """
 
                 
                     
