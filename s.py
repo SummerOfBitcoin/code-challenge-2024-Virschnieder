@@ -508,7 +508,7 @@ with open('output.txt', 'w') as y:
                 temp_t.append(concatenated_hash)
         wtxid_list = temp_t
     #print the final merkle root
-    print(f"Final Merkle Root: {wtxid_list[0]}")
+    #print(f"Final Merkle Root: {wtxid_list[0]}")
     #print(f"witness root hash : {witness_root_hash}")
     witness_root_hash = wtxid_list[0]
     witness_root_hash += '0000000000000000000000000000000000000000000000000000000000000000'
