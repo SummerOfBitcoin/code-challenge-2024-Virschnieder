@@ -492,22 +492,25 @@ with open('output.txt', 'w') as y:
     #print length of txid_list
     #print(f"Length of Txid List: {len(txid_list)}")
     #print(f"Length of Wtxid List: {len(wtxid_list)}")
+    
+    #merkle root of the wtxid_list
+    wtxid_list_copy = wtxid_list.copy()
     while len(wtxid_list) > 1:
-        temp_g = []
+        temp_t = []
         for i in range(0, len(wtxid_list), 2):
             if i+1 < len(wtxid_list):
                 # Concatenate two txids, hash them, and convert the result to hexadecimal
                 concatenated_hash = hashlib.sha256(hashlib.sha256(bytes.fromhex(wtxid_list[i] + wtxid_list[i+1])).digest()).digest().hex()
-                temp_g.append(concatenated_hash)
+                temp_t.append(concatenated_hash)
             else:
                 #if there is a single txid then concatenate it with itself and hash it
                 concatenated_hash = hashlib.sha256(hashlib.sha256(bytes.fromhex(wtxid_list[i] + wtxid_list[i])).digest()).digest().hex()
-                temp_g.append(concatenated_hash)
-        wtxid_list = temp_g
-    
-    #print(f"wtxid_List : {wtxid_list}")
-    witness_root_hash = wtxid_list[0]
+                temp_t.append(concatenated_hash)
+        wtxid_list = temp_t
+    #print the final merkle root
+    print(f"Final Merkle Root: {wtxid_list[0]}")
     #print(f"witness root hash : {witness_root_hash}")
+    witness_root_hash = wtxid_list[0]
     witness_root_hash += '0000000000000000000000000000000000000000000000000000000000000000'
     #hash the witness root hash
     wtxid_commitment = hashlib.sha256(hashlib.sha256(bytes.fromhex(witness_root_hash)).digest()).digest()
