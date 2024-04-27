@@ -95,7 +95,8 @@ with open('output.txt', 'w') as y:
                 if scriptpubkey_type not in ["v0_p2wpkh"]:
                     all_valid_segwit = False
                     break
-            if all_valid_segwit:
+            
+            if all_valid_segwit and counter_segwit < 4:
                 counter_segwit += 1
                 flag = 0
                 txid_data = ""
@@ -298,7 +299,7 @@ with open('output.txt', 'w') as y:
 
             # If all scriptpubkey_type are v0_p2pkh or v1_p2pkh, print the version number
     
-            all_valid = False
+            
             if all_valid:
                 array_s_m = []
                 data_c = ""
@@ -456,6 +457,7 @@ with open('output.txt', 'w') as y:
 
                 if flag == 0:
                     txid_set.add(hash.hex())
+                    wtxid_set.add(hash.hex())
                 
                 hash = reverse_byte(hash)
                 hash = hashlib.sha256(bytes.fromhex(hash)).digest()
