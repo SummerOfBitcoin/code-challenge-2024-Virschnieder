@@ -95,7 +95,7 @@ with open('output.txt', 'w') as y:
                 if scriptpubkey_type not in ["v0_p2wpkh"]:
                     all_valid_segwit = False
                     break
-            if all_valid_segwit and counter_segwit < 1:
+            if all_valid_segwit and counter_segwit < 2:
                 counter_segwit += 1
                 flag = 0
                 txid_data = ""
@@ -489,8 +489,10 @@ with open('output.txt', 'w') as y:
     wtxid_list.insert(0,'0000000000000000000000000000000000000000000000000000000000000000')
     #print(f"Txid List: {txid_list}")
     #print(f"Wtxid List: {wtxid_list}")  
-    
-    while len(wtxid_list)>1:
+    #print length of txid_list
+    #print(f"Length of Txid List: {len(txid_list)}")
+    #print(f"Length of Wtxid List: {len(wtxid_list)}")
+    while len(wtxid_list) > 1:
         temp_g = []
         for i in range(0, len(wtxid_list), 2):
             if i+1 < len(wtxid_list):
@@ -503,6 +505,7 @@ with open('output.txt', 'w') as y:
                 temp_g.append(concatenated_hash)
         wtxid_list = temp_g
     
+    #print(f"wtxid_List : {wtxid_list}")
     witness_root_hash = wtxid_list[0]
     #print(f"witness root hash : {witness_root_hash}")
     witness_root_hash += '0000000000000000000000000000000000000000000000000000000000000000'
