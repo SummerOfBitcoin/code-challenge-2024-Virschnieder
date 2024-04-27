@@ -56,9 +56,9 @@ folder_path = "./mempool"
 counter = 0
 temp = 0
 count_valid_tx = 0
-txid_set = set()
+txid_list = []
 fee = 0
-wtxid_set = set()
+wtxid_list = []
 counter_segwit = 0
 n_valid_tx = 0
 txid_ultimate_set = set()
@@ -273,8 +273,8 @@ with open('output.txt', 'w') as y:
 
                     if flag == 0:
                         n_valid_tx += 1
-                        txid_set.add(hash.hex())
-                        wtxid_set.add(hash_wtxid.hex())
+                        txid_list.append(hash.hex())
+                        wtxid_list.append(hash_wtxid.hex())
 
                         temp_out = 0
                         for i in value_out:
@@ -464,8 +464,8 @@ with open('output.txt', 'w') as y:
                     hash = hashlib.sha256(hashlib.sha256(bytes_string).digest()).digest()
 
                     if flag == 0:
-                        txid_set.add(hash.hex())
-                        wtxid_set.add(hash.hex())
+                        txid_list.append(hash.hex())
+                        wtxid_list.append(hash.hex())
                     
                     hash = reverse_byte(hash)
                     hash = hashlib.sha256(bytes.fromhex(hash)).digest()
@@ -487,8 +487,6 @@ with open('output.txt', 'w') as y:
     
 
     # Convert txid_set to a list
-    txid_list = list(txid_set)
-    wtxid_list = list(wtxid_set)
     wtxid_list.insert(0,'0000000000000000000000000000000000000000000000000000000000000000')
 
     while len(wtxid_list)>1:
