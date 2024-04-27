@@ -79,7 +79,7 @@ with open('output.txt', 'w') as y:
             
             # Flag to track if all scriptpubkey_type are v0_p2pkh or v1_p2pkh   
             all_valid = True
-            
+            all_valid_segwit = True
             # Iterate over each vin in the file
             for vin in data.get("vin", []):
                 scriptpubkey_type = vin.get("prevout", {}).get("scriptpubkey_type", "")
@@ -88,13 +88,14 @@ with open('output.txt', 'w') as y:
                 if scriptpubkey_type not in ["v0_p2pkh", "v1_p2pkh", "p2pkh"]:
                     all_valid = False
                     break  # No need to check further if one is not valid
+            
             for vin in data.get("vin", []):
                 scriptpubkey_type = vin.get("prevout", {}).get("scriptpubkey_type", "")
                 if scriptpubkey_type not in ["v0_p2wpkh"]:
                     all_valid_segwit = False
                     break
             
-            if all_valid_segwit and counter_segwit < 50:
+            if all_valid_segwit and counter_segwit < 4:
                 counter_segwit += 1
                 flag = 0
                 txid_data = ""
