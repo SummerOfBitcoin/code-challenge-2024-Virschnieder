@@ -101,6 +101,7 @@ with open('output.txt', 'w') as y:
                 txid_data = ""
                 wtxid_data = ""
                 message_data = []
+                flag_witness = 0
                 version = data.get("version")
                 locktime = data.get("locktime") 
                 txids = [vin.get("txid") for vin in data.get("vin", [])]
@@ -110,6 +111,9 @@ with open('output.txt', 'w') as y:
                 scriptpubkey_out = [vout.get("scriptpubkey") for vout in data.get("vout", [])]
                 scriptpubkey_in = [vin.get("prevout", {}).get("scriptpubkey") for vin in data.get("vin", [])]
                 witness = [vin.get("witness") for vin in data.get("vin", [])]
+                #if len(witness)>1 then raise a flag
+                if len(witness) > 1:
+                    flag_witness = 1
                 v_in = [vin.get("prevout", {}).get("value") for vin in data.get("vin", [])]
 
                 flag_duplicate = 0
@@ -120,7 +124,7 @@ with open('output.txt', 'w') as y:
                     else:
                         txid_ultimate_set.add(txids[i])
                 
-                if flag_duplicate == 0:
+                if flag_duplicate == 0 and flag_witness == 0:
                     #print(f"filename: {filename}")
                     n_txids = len(txids)
                     output_count = len(value_out)
