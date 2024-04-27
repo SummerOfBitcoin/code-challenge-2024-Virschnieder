@@ -95,7 +95,7 @@ with open('output.txt', 'w') as y:
                 if scriptpubkey_type not in ["v0_p2wpkh"]:
                     all_valid_segwit = False
                     break
-            if all_valid_segwit and counter_segwit < 3:
+            if all_valid_segwit and counter_segwit < 300:
                 counter_segwit += 1
                 flag = 0
                 txid_data = ""
