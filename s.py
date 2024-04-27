@@ -58,6 +58,7 @@ temp = 0
 count_valid_tx = 0
 txid_set = set()
 fee = 0
+wtxid_set = set()
 counter_segwit = 0
 #This variable will store the concatenation of version, input_count, txids, vouts, scriptsig_size, scriptsig, sequence, output_count, value, scriptpubkey_size, lockingscript, locktime
 with open('output.txt', 'w') as y:
@@ -444,6 +445,7 @@ with open('output.txt', 'w') as y:
 
                 if flag == 0:
                     txid_set.add(hash.hex())
+                    wtxid_set.add(hash.hex())
                 
                 hash = reverse_byte(hash)
                 hash = hashlib.sha256(bytes.fromhex(hash)).digest()
@@ -476,7 +478,7 @@ with open('output.txt', 'w') as y:
 
     # Convert txid_set to a list
     txid_list = list(txid_set)
-    wtxid_list = txid_list.copy()
+    wtxid_list = list(wtxid_set)
     wtxid_list.insert(0,'0000000000000000000000000000000000000000000000000000000000000000')
     
     while len(wtxid_list)>1:
