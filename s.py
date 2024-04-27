@@ -513,7 +513,7 @@ with open('output.txt', 'w') as y:
                 concatenated_hash = hashlib.sha256(hashlib.sha256(bytes.fromhex(wtxid_list[i] + wtxid_list[i])).digest()).digest().hex()
                 temp_t.append(concatenated_hash)
         wtxid_list = temp_t
-    #print the final merkle root
+    
     #print(f"Final Merkle Root: {wtxid_list[0]}")
     #print(f"witness root hash : {witness_root_hash}")
     witness_root_hash = wtxid_list[0]
