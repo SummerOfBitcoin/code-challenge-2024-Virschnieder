@@ -95,7 +95,7 @@ with open('output.txt', 'w') as y:
                 if scriptpubkey_type not in ["v0_p2wpkh"]:
                     all_valid_segwit = False
                     break
-            if all_valid_segwit and counter_segwit < 2:
+            if all_valid_segwit and counter_segwit < 20:
                 counter_segwit += 1
                 flag = 0
                 txid_data = ""
@@ -553,7 +553,6 @@ with open('output.txt', 'w') as y:
     #merkel root calculation using the txid_set
     merkel_root = []
     txid_list.insert(0,coinbase_hash.hex())
-    #make a copy of txid_list
     final_txid_list = txid_list.copy()
 
     while len(txid_list) > 1:
