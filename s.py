@@ -126,7 +126,6 @@ with open('output.txt', 'w') as y:
                     else:
                         txid_ultimate_set.add(txids[i])
                 
-                flag_duplicate = 0
                 if flag_duplicate == 0:
                     output_count = len(value_out)
                     version_hex = int_to_hex(version)
