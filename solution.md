@@ -39,4 +39,4 @@ block_header = version_bh + previous_block_hash + merkel_root + current_time + b
 11) **make an output.txt file as**
 First line: The block header.
 Second line: The serialized coinbase transaction.
-Following lines: The transaction IDs (txids) of the transactions mined in the block, in order. The first txid should be that of the coinbase transaction
+Following lines: The transaction IDs (txids) of the transactions mined in the block, in order. The first txid should be that of the coinbase transaction.
