@@ -24,4 +24,9 @@ This also involved taking out data form witness field in case of p2wpkh type tx 
 5) **If the tx is a valid one I calculated it's txid and wtxid.**
 
 6) **Calculation of witness commitment**
-    This involved 
+This involved calculation of merkle root using wtxid. Then hashing it with witness root hash. The final hex is the witness commitment for the coinbase transaction.
+
+7) **Formation of seralized coinbase transaction:**
+    coinbase = version + marker + flag + input_count+ input_c + vout + scriptsig_size + scriptsig + sequence + output_count + amount + scriptpubkey_size + scriptpubkey + amount_two + wtxid_commitment_size + wtxid_commitment + stack + size_stack + witness + locktime
+
+8)
